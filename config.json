@@ -1,83 +1,83 @@
 {
-  "nombreNegocio": "La Taverna del Port",
-  "subtituloHero": "Cocina mediterránea auténtica desde 1987",
-  "descripcionLarga": "Restaurante familiar con más de 35 años ofreciendo la mejor cocina mediterránea en el corazón de Barcelona. Paellas, mariscos y tapas elaboradas con producto local.",
-
+  "nombreNegocio": "Restaurante Pizzería Montevideo Despí",
+  "subtituloHero": "Pizzas artesanales y carnes a la brasa desde 1987",
+  "descripcionLarga": "Restaurante familiar especializado en pizzas artesanales, carnes a la brasa y gastronomía uruguaya. Ambiente acogedor con terraza, servicio atento y productos de calidad.",
+  
   "contacto": {
-    "telefono": "+34 932 456 789",
-    "email": "reservas@tavernadelport.com",
-    "direccion": "Carrer de la Marina 42",
-    "ciudad": "Barcelona",
-    "codigoPostal": "08005"
+    "telefono": "+34 932 538 157",
+    "email": "RestaurantMontevideoDesp@gmail.com",
+    "direccion": "Carrer Major, 75",
+    "ciudad": "Sant Joan Despí",
+    "codigoPostal": "08970"
   },
 
   "horarios": {
-    "lunes": "Cerrado",
-    "martes": "13:00 - 16:00 / 20:00 - 23:30",
-    "miercoles": "13:00 - 16:00 / 20:00 - 23:30",
-    "jueves": "13:00 - 16:00 / 20:00 - 23:30",
-    "viernes": "13:00 - 16:00 / 20:00 - 00:00",
-    "sabado": "12:00 - 16:30 / 20:00 - 00:00",
-    "domingo": "12:00 - 17:00"
+    "lunes": "08:00 - 23:30",
+    "martes": "08:00 - 23:30",
+    "miercoles": "08:00 - 23:30",
+    "jueves": "08:00 - 23:30",
+    "viernes": "08:00 - 00:00",
+    "sabado": "08:30 - 00:00",
+    "domingo": "08:30 - 17:00"
   },
 
   "servicios": [
     {
-      "icono": "🥘",
-      "nombre": "Paellas y Arroces",
-      "descripcion": "Paellas valencianas, arroz negro, fideuà y risottos preparados al momento con ingredientes frescos del mercado."
+      "icono": "🍕",
+      "nombre": "Pizzas Artesanales",
+      "descripcion": "Pizzas enormes hechas con masa casera y ingredientes frescos. Desde clásicas hasta combinaciones especiales como caprese, queso de cabra y miel."
     },
     {
-      "icono": "🦞",
-      "nombre": "Marisco Fresco",
-      "descripcion": "Selección diaria de marisco vivo: gambas, langosta, mejillones y almejas directamente de la lonja."
+      "icono": "🥩",
+      "nombre": "Carnes a la Brasa",
+      "descripcion": "Selección de carnes de calidad cocinadas a la parrilla. Bife de chorizo, costillas, milanesa napolitana y otros cortes uruguayos auténticos."
     },
     {
-      "icono": "🍷",
-      "nombre": "Carta de Vinos",
-      "descripcion": "Más de 80 referencias de vinos nacionales e internacionales. Cava y champagne por copas o botella."
+      "icono": "🥟",
+      "nombre": "Empanadas Uruguayas",
+      "descripcion": "Empanadas con rellenos tradicionales: carne picada, pollo, queso y más. Perfectas como entrada o para compartir con amigos."
     },
     {
-      "icono": "🎂",
-      "nombre": "Menú Degustación",
-      "descripcion": "Experiencia gastronómica de 7 pasos maridada con vinos. Disponible de martes a viernes con reserva previa."
+      "icono": "🍽️",
+      "nombre": "Menú Variado",
+      "descripcion": "Amplia oferta de platos uruguayos y mediterráneos. Milanesas, hamburguesas gourmet, ensaladas frescas y opciones vegetarianas."
     },
     {
       "icono": "🎉",
       "nombre": "Eventos Privados",
-      "descripcion": "Sala privada para grupos de hasta 50 personas. Celebraciones, comidas de empresa y eventos especiales."
+      "descripcion": "Espacios y menús personalizados para celebraciones, comidas de empresa y eventos especiales. Equipos dedicados a hacer memorable tu celebración."
     },
     {
       "icono": "🚚",
-      "nombre": "Servicio a Domicilio",
-      "descripcion": "Llevamos nuestras paellas y arroces a tu casa. Radio de entrega: 5 km. Pedido mínimo 48h de antelación."
+      "nombre": "Delivery y Para Llevar",
+      "descripcion": "Servicio a domicilio disponible. También puedes recoger tus pedidos para llevar. Rápido, seguro y con la misma calidad que en el local."
     }
   ],
 
   "whatsapp": {
-    "numero": "+34932456789",
-    "mensaje": "Hola! Me gustaría hacer una reserva en La Taverna del Port"
+    "numero": "+34932538157",
+    "mensaje": "Hola! Me gustaría hacer una reserva o solicitar información sobre vuestros servicios en Montevideo Despí"
   },
 
   "ubicacionMapa": {
-    "latitud": 41.3851,
-    "longitud": 2.1934,
-    "googleMapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2993.4!2d2.19!3d41.385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDIzJzA2LjQiTiAywrAxMScyMi40IkU!5e0!3m2!1ses!2ses!4v1234567890"
+    "latitud": 41.3819,
+    "longitud": 2.0949,
+    "googleMapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2993.2!2d2.0949!3d41.3819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a49e5c3f1f1f1f%3A0x1f1f1f1f1f1f1f1f!2sCarrer%20Major%2C%2075%2C%2008970%20Sant%20Joan%20Desp%C3%AD!5e0!3m2!1ses!2ses!4v1234567890"
   },
 
   "colores": {
-    "primary": "#1a1a2e",
-    "accent": "#c0392b",
-    "accent2": "#e67e22",
-    "light": "#f8f5f0",
+    "primary": "#1a1f2e",
+    "accent": "#d4402a",
+    "accent2": "#f39c12",
+    "light": "#f9f6f2",
     "text": "#2c2c2c",
-    "textLight": "#6c757d"
+    "textLight": "#7f8c8d"
   },
 
   "redesSociales": {
-    "instagram": "https://instagram.com/tavernadelport",
-    "facebook": "https://facebook.com/tavernadelport",
-    "tripadvisor": "https://tripadvisor.com/tavernadelport"
+    "instagram": "https://instagram.com/montevideodespi",
+    "facebook": "https://facebook.com/montevideodepi",
+    "tripadvisor": "https://tripadvisor.com/montevideodepi"
   },
 
   "galeria": {
@@ -85,6 +85,6 @@
   },
 
   "seo": {
-    "keywords": "restaurante barcelona, paella barcelona, mariscos barcelona, restaurante mediterráneo, puerto barcelona"
+    "keywords": "restaurante sant joan despí, pizzería barcelona, carnes a la brasa, gastronomía uruguaya, milanesa napolitana, pizzas artesanales"
   }
 }
