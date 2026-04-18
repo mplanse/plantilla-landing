@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Meta tags dinámicos — se rellenan desde config.json -->
+  <title>Cargando...</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* =====================================================
+       RESET & BASE
+       ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Valores por defecto — se sobreescriben desde config.json */
+      --primary:    #1a1a2e;
+      --accent:     #c0392b;
+      --accent2:    #e67e22;
+      --light:      #f8f5f0;
+      --text:       #2c2c2c;
+      --text-light: #6c757d;
+      --white:      #ffffff;
+      --shadow:     0 4px 24px rgba(0,0,0,0.10);
+      --shadow-lg:  0 8px 40px rgba(0,0,0,0.16);
+      --radius:     12px;
+      --transition: 0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    body.loaded { opacity: 1; }
+
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* =====================================================
+       LOADING SPINNER
+       ===================================================== */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    #loading-screen.hidden { opacity: 0; visibility: hidden; }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* =====================================================
+       HEADER / NAV
+       ===================================================== */
+    #header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--primary);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+      transition: background var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.80);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color var(--transition);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .nav-hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.active span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav */
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: var(--primary);
+      border-top: 1px solid rgba(255,255,255,0.10);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+    .nav-mobile.open { max-height: 400px; }
+    .nav-mobile a {
+      display: block;
+      padding: 14px 24px;
+      color: rgba(255,255,255,0.80);
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-mobile a:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+
+    /* =====================================================
+       HERO
+       ===================================================== */
+    #hero {
+      background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 80%, var(--accent)) 100%);
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative circles */
+    #hero::before, #hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.06;
+      background: var(--white);
+    }
+    #hero::before { width: 600px; height: 600px; right: -120px; top: -120px; }
+    #hero::after  { width: 350px; height: 350px; left: -80px;  bottom: -80px; }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.90);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.20);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.20);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.40);
+    }
+    .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.40);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: bounce 2s ease infinite;
+    }
+    .hero-scroll svg { width: 20px; opacity: 0.5; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* =====================================================
+       SECTION COMMON
+       ===================================================== */
+    section { padding: 88px 0; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-light);
+      max-width: 540px;
+      margin-bottom: 56px;
+    }
+    .section-header { margin-bottom: 0; }
+
+    /* =====================================================
+       SERVICIOS
+       ===================================================== */
+    #servicios { background: var(--light); }
+
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .servicio-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow var(--transition);
+    }
+    .servicio-card.visible { opacity: 1; transform: translateY(0); }
+    .servicio-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+    .servicio-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent), var(--accent2, var(--accent)));
+      border-radius: 4px 0 0 4px;
+    }
+
+    .servicio-icono {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .servicio-nombre {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .servicio-desc {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       CONTACTO
+       ===================================================== */
+    #contacto { background: var(--white); }
+
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* Info panel */
+    .contacto-info {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .info-block {}
+    .info-block h3 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .info-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .info-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .info-text strong {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .info-text span {
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    /* Horarios */
+    .horarios-table { width: 100%; border-collapse: collapse; }
+    .horarios-table tr { border-bottom: 1px solid #eee; }
+    .horarios-table tr:last-child { border-bottom: none; }
+    .horarios-table td {
+      padding: 7px 0;
+      font-size: 0.85rem;
+      vertical-align: middle;
+    }
+    .horarios-table td:first-child {
+      font-weight: 600;
+      color: var(--text);
+      width: 50%;
+      text-transform: capitalize;
+    }
+    .horarios-table td:last-child {
+      color: var(--text-light);
+      text-align: right;
+    }
+    .horarios-table tr.cerrado td { color: #bbb; }
+    .horarios-table tr.hoy-marker td:first-child {
+      color: var(--accent);
+    }
+    .horarios-table tr.hoy-marker td:last-child {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* WhatsApp button */
+    .btn-whatsapp {
+      background: #25D366;
+      color: var(--white);
+      width: 100%;
+      justify-content: center;
+      font-size: 1rem;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.25);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-whatsapp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(37,211,102,0.35);
+    }
+    .btn-whatsapp svg { width: 22px; flex-shrink: 0; }
+
+    /* Map panel */
+    .contacto-mapa {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 88px;
+    }
+
+    .mapa-wrapper {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      aspect-ratio: 4/3;
+      background: var(--light);
+    }
+    .mapa-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .mapa-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      transition: gap var(--transition);
+    }
+    .mapa-link:hover { gap: 12px; }
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+    #footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.55);
+      padding: 40px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .footer-brand span { color: var(--accent); }
+
+    .footer-copy { font-size: 0.82rem; }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+    .footer-social a {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.60);
+      font-size: 0.85rem;
+      transition: background var(--transition), color var(--transition);
+    }
+    .footer-social a:hover { background: var(--accent); color: var(--white); }
+
+    /* =====================================================
+       WHATSAPP FLOATING BUTTON
+       ===================================================== */
+    #whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 200;
+      width: 58px;
+      height: 58px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.40);
+      transition: transform var(--transition), box-shadow var(--transition);
+      animation: pulse-green 2.5s ease infinite;
+    }
+    #whatsapp-float:hover {
+      transform: scale(1.10);
+      box-shadow: 0 8px 30px rgba(37,211,102,0.55);
+      animation: none;
+    }
+    #whatsapp-float svg { width: 28px; color: var(--white); }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.40); }
+      50% { box-shadow: 0 4px 36px rgba(37,211,102,0.65); }
+    }
+
+    /* =====================================================
+       UTILITY ANIMATIONS
+       ===================================================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-mobile { display: flex; }
+
+      section { padding: 64px 0; }
+
+      .contacto-grid { grid-template-columns: 1fr; }
+      .contacto-mapa { position: static; }
+
+      .footer-inner { flex-direction: column; align-items: center; text-align: center; }
+
+      #whatsapp-float { bottom: 20px; right: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-cta-group { flex-direction: column; }
+      .btn { justify-content: center; }
+      .servicios-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div id="loading-screen"><div class="spinner"></div></div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="header">
+    <div class="container">
+      <nav class="nav-inner">
+        <a class="nav-logo" href="#hero" id="nav-logo">Negocio</a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#contacto">Reservas</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+    <!-- Mobile menu -->
+    <div class="nav-mobile" id="nav-mobile">
+      <a href="#servicios">Servicios</a>
+      <a href="#contacto">Contacto</a>
+      <a href="#contacto">Reservas</a>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge" id="hero-badge">Bienvenidos</div>
+        <h1 class="hero-title" id="hero-title">Cargando<em>...</em></h1>
+        <p class="hero-subtitle" id="hero-subtitle"></p>
+        <div class="hero-cta-group">
+          <a href="#contacto" class="btn btn-primary" id="hero-cta-primary">Reservar mesa</a>
+          <a href="#servicios" class="btn btn-outline">Ver servicios</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== SERVICIOS ===== -->
+  <section id="servicios">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label">Lo que ofrecemos</p>
+        <h2 class="section-title">Nuestros servicios</h2>
+        <p class="section-subtitle">Todo lo que necesitas, en un solo lugar.</p>
+      </div>
+      <div class="servicios-grid" id="servicios-grid">
+        <!-- Las tarjetas se generan desde JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACTO ===== -->
+  <section id="contacto">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label">Encuéntranos</p>
+        <h2 class="section-title">Contacto & Horarios</h2>
+        <p class="section-subtitle" id="contacto-direccion-intro">Estamos esperándote.</p>
+      </div>
+      <div class="contacto-grid">
+
+        <!-- Panel izquierdo: info + horarios + botón WA -->
+        <div class="contacto-info fade-up">
+
+          <!-- Datos de contacto -->
+          <div class="info-block">
+            <h3>Información</h3>
+            <div class="info-item">
+              <div class="info-icon">📍</div>
+              <div class="info-text">
+                <strong>Dirección</strong>
+                <span id="info-direccion">—</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">📞</div>
+              <div class="info-text">
+                <strong>Teléfono</strong>
+                <a id="info-telefono" href="#"><span>—</span></a>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">✉️</div>
+              <div class="info-text">
+                <strong>Email</strong>
+                <a id="info-email" href="#"><span>—</span></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Horarios -->
+          <div class="info-block">
+            <h3>Horarios</h3>
+            <table class="horarios-table" id="horarios-table">
+              <!-- Filas generadas desde JS -->
+            </table>
+          </div>
+
+          <!-- WhatsApp CTA -->
+          <div class="info-block">
+            <a id="wa-btn" href="#" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+              <!-- WhatsApp icon -->
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Contactar por WhatsApp
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Panel derecho: mapa -->
+        <div class="contacto-mapa fade-up">
+          <div class="mapa-wrapper" id="mapa-wrapper">
+            <iframe
+              id="mapa-iframe"
+              src=""
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Mapa de ubicación"
+            ></iframe>
+          </div>
+          <a id="mapa-link" href="#" target="_blank" rel="noopener noreferrer" class="mapa-link">
+            Ver en Google Maps
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand" id="footer-brand">Negocio</div>
+        <p class="footer-copy" id="footer-copy">© 2025 · Todos los derechos reservados</p>
+        <div class="footer-social" id="footer-social">
+          <!-- Iconos sociales generados desde JS -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Floating button -->
+  <a id="whatsapp-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <!-- ===================================================
+       JAVASCRIPT — Lee config.json e inyecta los datos
+       =================================================== -->
+  <script>
+    // ── Utilidades ──────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    /** Aplica variables CSS desde el objeto colores del config */
+    function applyColors(colores) {
+      const root = document.documentElement.style;
+      if (colores.primary)    root.setProperty('--primary',    colores.primary);
+      if (colores.accent)     root.setProperty('--accent',     colores.accent);
+      if (colores.accent2)    root.setProperty('--accent2',    colores.accent2);
+      if (colores.light)      root.setProperty('--light',      colores.light);
+      if (colores.text)       root.setProperty('--text',       colores.text);
+      if (colores.textLight)  root.setProperty('--text-light', colores.textLight);
+    }
+
+    /** Actualiza meta tags de la página */
+    function applyMeta(cfg) {
+      document.title = cfg.nombreNegocio;
+      document.querySelector('meta[name="description"]').content  = cfg.descripcionLarga || cfg.subtituloHero;
+      document.querySelector('meta[name="keywords"]').content     = cfg.seo?.keywords || '';
+      document.querySelector('meta[property="og:title"]').content = cfg.nombreNegocio;
+      document.querySelector('meta[property="og:description"]').content = cfg.descripcionLarga || cfg.subtituloHero;
+    }
+
+    /** Construye la URL de WhatsApp */
+    function buildWaUrl(wa) {
+      const numero  = wa.numero.replace(/\s/g, '');
+      const mensaje = encodeURIComponent(wa.mensaje || '');
+      return `https://wa.me/${numero}?text=${mensaje}`;
+    }
+
+    /** Renderiza el grid de servicios */
+    function renderServicios(servicios) {
+      const grid = $('servicios-grid');
+      grid.innerHTML = '';
+      servicios.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'servicio-card';
+        card.style.transitionDelay = `${i * 80}ms`;
+        card.innerHTML = `
+          <span class="servicio-icono">${s.icono}</span>
+          <p class="servicio-nombre">${s.nombre}</p>
+          <p class="servicio-desc">${s.descripcion}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    /** Renderiza la tabla de horarios (con la fila del día actual destacada) */
+    function renderHorarios(horarios) {
+      const diasSemana = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
+      const diasDisplay = {
+        lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles',
+        jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo'
+      };
+      const hoy = diasSemana[new Date().getDay()];
+      const tabla = $('horarios-table');
+      tabla.innerHTML = '';
+
+      // Ordenar desde lunes
+      const orden = ['lunes','martes','miercoles','jueves','viernes','sabado','domingo'];
+      orden.forEach(dia => {
+        if (horarios[dia] === undefined) return;
+        const cerrado = horarios[dia].toLowerCase() === 'cerrado';
+        const esHoy   = dia === hoy;
+        const tr = document.createElement('tr');
+        if (cerrado) tr.classList.add('cerrado');
+        if (esHoy)   tr.classList.add('hoy-marker');
+        tr.innerHTML = `
+          <td>${diasDisplay[dia]}${esHoy ? ' <small style="font-size:0.68rem;font-weight:400;opacity:.7">(hoy)</small>' : ''}</td>
+          <td>${horarios[dia]}</td>
+        `;
+        tabla.appendChild(tr);
+      });
+    }
+
+    /** Renderiza los iconos de redes sociales en el footer */
+    function renderSocial(redes) {
+      const container = $('footer-social');
+      container.innerHTML = '';
+      const iconos = {
+        instagram: `<svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
+        facebook: `<svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+        tripadvisor: `<svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.5 14.25a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zm3 0a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zM6 9.75h2.25a5.25 5.25 0 0110.5 0H21v1.5h-2.25a5.25 5.25 0 01-10.5 0H6V9.75z"/></svg>`,
+        twitter: `<svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+        youtube: `<svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>`
+      };
+      Object.entries(redes).forEach(([red, url]) => {
+        if (!url || !iconos[red]) return;
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.setAttribute('aria-label', red);
+        a.innerHTML = iconos[red];
+        container.appendChild(a);
+      });
+    }
+
+    // ── IntersectionObserver para animaciones al hacer scroll ──
+    function initScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Una vez visible, dejar de observar
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.fade-up, .servicio-card').forEach(el => observer.observe(el));
+    }
+
+    // ── Hamburger menu ──────────────────────────────────────
+    function initHamburger() {
+      const btn    = $('hamburger');
+      const mobile = $('nav-mobile');
+
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        mobile.classList.toggle('open');
+      });
+
+      // Cerrar al hacer click en un enlace
+      mobile.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          btn.classList.remove('active');
+          mobile.classList.remove('open');
+        });
+      });
+    }
+
+    // ── Carga principal ─────────────────────────────────────
+    async function init() {
+      try {
+        const response = await fetch('config.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const cfg = await response.json();
+
+        // 1. Colores
+        if (cfg.colores) applyColors(cfg.colores);
+
+        // 2. Meta tags
+        applyMeta(cfg);
+
+        // 3. Navegación — logo
+        $('nav-logo').textContent = cfg.nombreNegocio;
+
+        // 4. Hero
+        $('hero-badge').textContent = cfg.contacto?.ciudad || 'Bienvenidos';
+        // Dividir nombre en dos partes para el <em>
+        const palabras = cfg.nombreNegocio.trim().split(' ');
+        const mitad    = Math.ceil(palabras.length / 2);
+        const parte1   = palabras.slice(0, mitad).join(' ');
+        const parte2   = palabras.slice(mitad).join(' ');
+        $('hero-title').innerHTML = parte2
+          ? `${parte1} <em>${parte2}</em>`
+          : `<em>${parte1}</em>`;
+        $('hero-subtitle').textContent = cfg.subtituloHero;
+
+        // 5. Servicios
+        if (Array.isArray(cfg.servicios) && cfg.servicios.length) {
+          renderServicios(cfg.servicios);
+        }
+
+        // 6. Contacto — info
+        const c = cfg.contacto;
+        $('info-direccion').textContent  = `${c.direccion}, ${c.codigoPostal} ${c.ciudad}`;
+        $('contacto-direccion-intro').textContent = `Visítanos en ${c.ciudad}`;
+        const telEl = $('info-telefono');
+        telEl.href  = `tel:${c.telefono.replace(/\s/g,'')}`;
+        telEl.querySelector('span').textContent = c.telefono;
+        const mailEl = $('info-email');
+        mailEl.href  = `mailto:${c.email}`;
+        mailEl.querySelector('span').textContent = c.email;
+
+        // 7. Horarios
+        if (cfg.horarios) renderHorarios(cfg.horarios);
+
+        // 8. WhatsApp
+        if (cfg.whatsapp) {
+          const waUrl = buildWaUrl(cfg.whatsapp);
+          $('wa-btn').href          = waUrl;
+          $('whatsapp-float').href  = waUrl;
+        }
+
+        // 9. Mapa
+        if (cfg.ubicacionMapa) {
+          const mapa = cfg.ubicacionMapa;
+          if (mapa.googleMapsEmbedUrl) {
+            $('mapa-iframe').src = mapa.googleMapsEmbedUrl;
+          } else if (mapa.latitud && mapa.longitud) {
+            // Fallback: embed por coordenadas (sin API key, funciona para lectura pública)
+            $('mapa-iframe').src =
+              `https://maps.google.com/maps?q=${mapa.latitud},${mapa.longitud}&z=16&output=embed`;
+          }
+          $('mapa-link').href =
+            `https://www.google.com/maps/search/?api=1&query=${mapa.latitud},${mapa.longitud}`;
+        }
+
+        // 10. Footer
+        $('footer-brand').innerHTML = cfg.nombreNegocio;
+        $('footer-copy').textContent =
+          `© ${new Date().getFullYear()} ${cfg.nombreNegocio} · Todos los derechos reservados`;
+        if (cfg.redesSociales) renderSocial(cfg.redesSociales);
+
+      } catch (err) {
+        console.error('[config.json] Error cargando la configuración:', err);
+        // Mostrar mensaje de error amigable
+        document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;height:100vh;
+               font-family:sans-serif;flex-direction:column;gap:16px;padding:24px;text-align:center">
+            <span style="font-size:3rem">⚠️</span>
+            <h1 style="font-size:1.4rem">No se pudo cargar config.json</h1>
+            <p style="color:#666;max-width:420px">
+              Asegúrate de que el archivo <code>config.json</code> está en la misma carpeta que
+              <code>index.html</code> y de que estás sirviendo la página con un servidor local
+              (no abriendo el archivo directamente como <em>file://</em>).
+            </p>
+            <p style="color:#999;font-size:.85rem">Tip: usa <code>npx serve .</code> o la extensión Live Server de VS Code.</p>
+          </div>`;
+        return;
+      }
+
+      // Ocultar loading y mostrar página
+      $('loading-screen').classList.add('hidden');
+      document.body.classList.add('loaded');
+
+      // Animaciones scroll
+      initScrollAnimations();
+      initHamburger();
+    }
+
+    // Arrancar
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

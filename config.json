@@ -1,0 +1,90 @@
+{
+  "nombreNegocio": "La Taverna del Port",
+  "subtituloHero": "Cocina mediterránea auténtica desde 1987",
+  "descripcionLarga": "Restaurante familiar con más de 35 años ofreciendo la mejor cocina mediterránea en el corazón de Barcelona. Paellas, mariscos y tapas elaboradas con producto local.",
+
+  "contacto": {
+    "telefono": "+34 932 456 789",
+    "email": "reservas@tavernadelport.com",
+    "direccion": "Carrer de la Marina 42",
+    "ciudad": "Barcelona",
+    "codigoPostal": "08005"
+  },
+
+  "horarios": {
+    "lunes": "Cerrado",
+    "martes": "13:00 - 16:00 / 20:00 - 23:30",
+    "miercoles": "13:00 - 16:00 / 20:00 - 23:30",
+    "jueves": "13:00 - 16:00 / 20:00 - 23:30",
+    "viernes": "13:00 - 16:00 / 20:00 - 00:00",
+    "sabado": "12:00 - 16:30 / 20:00 - 00:00",
+    "domingo": "12:00 - 17:00"
+  },
+
+  "servicios": [
+    {
+      "icono": "🥘",
+      "nombre": "Paellas y Arroces",
+      "descripcion": "Paellas valencianas, arroz negro, fideuà y risottos preparados al momento con ingredientes frescos del mercado."
+    },
+    {
+      "icono": "🦞",
+      "nombre": "Marisco Fresco",
+      "descripcion": "Selección diaria de marisco vivo: gambas, langosta, mejillones y almejas directamente de la lonja."
+    },
+    {
+      "icono": "🍷",
+      "nombre": "Carta de Vinos",
+      "descripcion": "Más de 80 referencias de vinos nacionales e internacionales. Cava y champagne por copas o botella."
+    },
+    {
+      "icono": "🎂",
+      "nombre": "Menú Degustación",
+      "descripcion": "Experiencia gastronómica de 7 pasos maridada con vinos. Disponible de martes a viernes con reserva previa."
+    },
+    {
+      "icono": "🎉",
+      "nombre": "Eventos Privados",
+      "descripcion": "Sala privada para grupos de hasta 50 personas. Celebraciones, comidas de empresa y eventos especiales."
+    },
+    {
+      "icono": "🚚",
+      "nombre": "Servicio a Domicilio",
+      "descripcion": "Llevamos nuestras paellas y arroces a tu casa. Radio de entrega: 5 km. Pedido mínimo 48h de antelación."
+    }
+  ],
+
+  "whatsapp": {
+    "numero": "+34932456789",
+    "mensaje": "Hola! Me gustaría hacer una reserva en La Taverna del Port"
+  },
+
+  "ubicacionMapa": {
+    "latitud": 41.3851,
+    "longitud": 2.1934,
+    "googleMapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2993.4!2d2.19!3d41.385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDIzJzA2LjQiTiAywrAxMScyMi40IkU!5e0!3m2!1ses!2ses!4v1234567890"
+  },
+
+  "colores": {
+    "primary": "#1a1a2e",
+    "accent": "#c0392b",
+    "accent2": "#e67e22",
+    "light": "#f8f5f0",
+    "text": "#2c2c2c",
+    "textLight": "#6c757d"
+  },
+
+  "redesSociales": {
+    "instagram": "https://instagram.com/tavernadelport",
+    "facebook": "https://facebook.com/tavernadelport",
+    "tripadvisor": "https://tripadvisor.com/tavernadelport"
+  },
+
+  "galeria": {
+    "imagenes": []
+  },
+
+  "seo": {
+    "keywords": "restaurante barcelona, paella barcelona, mariscos barcelona, restaurante mediterráneo, puerto barcelona"
+  }
+}
